@@ -1,6 +1,10 @@
 import os.path
 from selene.support.shared import browser
 from selene import have
+from controls import datepicker
+from controls import dropdown
+from controls import radiobutton
+from controls import checkbox
 
 def open_page():
     browser.open('/automation-practice-form')
@@ -15,10 +19,7 @@ def fill_user_fields(name, last_name, email, phone, adress):
 
 
 def select_option(selector, text):
-    browser.element(selector).click()
-    browser.all('[id^=react-select][id*=option]').element_by(
-        have.exact_text(text)
-    ).click()
+    dropdown.select(selector, text)
 
 
 def select_state(text):
@@ -42,12 +43,7 @@ def upload_picture(path_to_photo):
 
 
 def select_date_of_birthday(day, month, year):
-    browser.element('[id="dateOfBirthInput"]').click()
-    browser.element('.react-datepicker__month-select').click()
-    browser.element(f'[value="{month - 1}"]').click()
-    browser.element('.react-datepicker__year-select').click()
-    browser.element(f'[value = "{year}"]').click()
-    browser.element(f'.react-datepicker__day--00{day}').click()
+    datepicker.birthday(day,month,year)
 
 
 def push_submit_button():
@@ -61,13 +57,10 @@ def asser_user_registration(name, email, male, phone, birthday, subjects, hobbie
 
 
 def select_gender(gender):
-    browser.element(f'[name=gender][value={gender}]+label').click()
+    radiobutton.gender(gender)
 
 
 def select_hobbies(hobies):
-    checkboxes_click(browser.all('[for^=hobbies-checkbox]'), hobies)
+    checkbox.hobby(hobies)
 
 
-def checkboxes_click(elements, *by_texts):
-    for value in by_texts:
-        elements.element_by(have.text(value)).click()
